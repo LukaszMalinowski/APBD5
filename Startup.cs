@@ -32,8 +32,6 @@ namespace cwiczenia5_zen_s19743
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ITripService, TripService>();
-
-            services.AddScoped<DbContext, s19743Context>();
             
             services.AddControllers()
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);

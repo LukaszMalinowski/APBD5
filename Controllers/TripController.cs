@@ -17,7 +17,7 @@ namespace cwiczenia5_zen_s19743.Controllers
         [HttpGet]
         public IActionResult GetAllTrips()
         {
-            return Ok();
+            return Ok(_service.GetAllTrips());
         }
     }
 }
