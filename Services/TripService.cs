@@ -11,6 +11,7 @@ namespace cwiczenia5_zen_s19743.Services
         {
             var context = new s19743Context();
 
+            //TODO this could be done cleaner
             var trips = context.Trips
                 .Select(trip =>
                     new TripDto
@@ -24,8 +25,7 @@ namespace cwiczenia5_zen_s19743.Services
                         {
                             Name = countryTrip.IdCountryNavigation.Name
                         }),
-                        Clients = trip.ClientTrips.Where(clientTrip =>
-                                clientTrip.IdTrip == trip.IdTrip)
+                        Clients = trip.ClientTrips.Where(clientTrip => clientTrip.IdTrip == trip.IdTrip)
                             .Select(clientTrip => new ClientDto
                             {
                                 FirstName = clientTrip.IdClientNavigation.FirstName,
