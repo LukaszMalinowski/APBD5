@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using cwiczenia5_zen_s19743.Exceptions;
 using cwiczenia5_zen_s19743.Models;
 using cwiczenia5_zen_s19743.Models.DTOs;
@@ -13,27 +14,8 @@ namespace cwiczenia5_zen_s19743.Services
         {
             var context = new s19743Context();
 
-            //TODO this could be done cleaner
             var trips = context.Trips
-                .Select(trip =>
-                    new TripDto
-                    {
-                        Name = trip.Name,
-                        Description = trip.Description,
-                        DateFrom = trip.DateFrom,
-                        DateTo = trip.DateTo,
-                        MaxPeople = trip.MaxPeople,
-                        Countries = trip.CountryTrips.Select(countryTrip => new CountryDto
-                        {
-                            Name = countryTrip.IdCountryNavigation.Name
-                        }),
-                        Clients = trip.ClientTrips.Where(clientTrip => clientTrip.IdTrip == trip.IdTrip)
-                            .Select(clientTrip => new ClientDto
-                            {
-                                FirstName = clientTrip.IdClientNavigation.FirstName,
-                                LastName = clientTrip.IdClientNavigation.LastName
-                            })
-                    })
+                .Select(CreateNewTripDto())
                 .OrderByDescending(dto => dto.DateFrom)
                 .ToList();
 
@@ -62,6 +44,29 @@ namespace cwiczenia5_zen_s19743.Services
             context.ClientTrips.Add(clientTrip);
 
             context.SaveChanges();
+        }
+
+        private static Expression<Func<Trip, TripDto>> CreateNewTripDto()
+        {
+            return trip =>
+                new TripDto
+                {
+                    Name = trip.Name,
+                    Description = trip.Description,
+                    DateFrom = trip.DateFrom,
+                    DateTo = trip.DateTo,
+                    MaxPeople = trip.MaxPeople,
+                    Countries = trip.CountryTrips.Select(countryTrip => new CountryDto
+                    {
+                        Name = countryTrip.IdCountryNavigation.Name
+                    }),
+                    Clients = trip.ClientTrips.Where(clientTrip => clientTrip.IdTrip == trip.IdTrip)
+                        .Select(clientTrip => new ClientDto
+                        {
+                            FirstName = clientTrip.IdClientNavigation.FirstName,
+                            LastName = clientTrip.IdClientNavigation.LastName
+                        })
+                };
         }
 
         private ClientTrip CreateClientTripFromRequest(TripRegistrationDto registration, Client client)
