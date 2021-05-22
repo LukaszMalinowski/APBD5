@@ -13,7 +13,7 @@ namespace cwiczenia5_zen_s19743.Models
         }
 
         public int IdClient { get; set; }
-        public string FirstName { get; set; }
+        public string FirstName { get; set; }   
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Telephone { get; set; }
